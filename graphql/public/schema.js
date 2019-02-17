@@ -5,13 +5,23 @@ const typeDefs = gql`
         idTeam: ID!
         teamName: String!
         teamFlag: String
-        isActive(active: Boolean): Boolean
+        isActive: Boolean
         teamCreatedAt: String,
         teamUpdatedAt: String
     }
 
-    type Query{
+    input TeamInput {
+        teamName: String!,
+        teamFlag: String
+        isActive: Boolean
+    }
+
+    type Query {
         team: [Team]
+    }
+
+    type Mutation {
+        upsertTeam(teamDetails: TeamInput!): [Team]
     }
 `;
 
