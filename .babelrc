@@ -1,4 +1,6 @@
 {
   "plugins": ["@babel/transform-runtime", "@babel/plugin-proposal-class-properties"],
-  "presets":["@babel/preset-env"]
+  "presets":["@babel/preset-env"],
+  "sourceMaps": true,
+  "retainLines": true
 }

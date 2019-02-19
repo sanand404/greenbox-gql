@@ -19,7 +19,7 @@ class TeamModel {
         sql: sqlQuery,
         inserts: queryValues
       });
-      logger.info('GQL::Query::Team::fetchTeam::response:: ', response);
+      logger.debug('GQL::Query::Team::fetchTeam::response:: ', response);
       return Promise.resolve(response[0]);
     }
     catch (error) {
