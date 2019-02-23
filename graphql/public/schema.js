@@ -11,6 +11,7 @@ const typeDefs = gql`
     }
 
     input TeamInput {
+        id: ID,
         teamName: String!,
         teamFlag: String
         isActive: Boolean
