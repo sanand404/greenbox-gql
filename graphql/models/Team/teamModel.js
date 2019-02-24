@@ -38,9 +38,7 @@ class TeamModel {
     try {
       const { id, teamName } = params.teamDetails;
 
-      const sqlQuery = `SELECT * FROM ${RDS_TABLES.TEAM} WHERE ?? = ?`;
-      const queryValues = ['teamName', teamName];
-      const response = await rdsService.query({ sql: sqlQuery, inserts: queryValues });
+      const response = await this.fetchTeamDetailsByParams(params);
 
       logger.debug('GQL::Mutation::TeamModel::upsertTeam::response:: ', response);
 
@@ -109,8 +107,7 @@ class TeamModel {
         teamName: teamName || null,
         teamFlag: teamFlag || null,
         isActive: isActive || null,
-        teamCreatedAt: new Date().toISOString(),
-        teamUpdatedAt: new Date().toISOString()
+        teamUpdatedAt: new Date().toISOString().slice(0, 19).replace('T', ' '),
       };
 
       // Iterate the allColumns and assign the value if it exists in param
@@ -137,13 +134,67 @@ class TeamModel {
         inserts: insertColumnValues
       });
 
-      logger.debug('GQL::Mutation::TeamModel::updateTeam::response:: ', response);
+      console.log('GQL::Mutation::TeamModel::updateTeam::response:: ', response);
 
-      // ToDo:: Return updated `Team` record
-      return Promise.resolve(response);
+      if (response.affectedRows) {
+        const updatedTeamRecord = await this.fetchTeamDetailsByParams(params);
+        return Promise.resolve(updatedTeamRecord);
+      }
+
+      return Promise.reject(`${id} ${teamName} doesn't exists`);
     }
     catch (error) {
       logger.error('GQL::Mutation::TeamModel:updateTeam::Error:: ', error);
+      return Promise.reject(error);
+    }
+  }
+
+  /**
+   * This method update the team detail
+   * @params params - The team input object
+   * @returns {Promise<Object>} - A promise resolving Team details
+   */
+  fetchTeamDetailsByParams = async(params) => {
+    try {
+      const insertColumnValues = [];
+      let insertColumnName = '';
+      const { id, teamName, teamFlag, isActive } = params.teamDetails;
+
+      const allColumns = {
+        idTeam: id || null,
+        teamName: teamName || null,
+        teamFlag: teamFlag || null,
+        isActive: isActive || null
+      };
+
+      // Iterate the allColumns and assign the value if it exists in param
+      let flag = true;
+      _.map(allColumns, (item, index) => {
+        if (flag && item) {
+          flag = false;
+          insertColumnName += '?? = ?';
+          insertColumnValues.push(index);
+          insertColumnValues.push(item);
+        }
+        else if (item) {
+          insertColumnName += ' AND ?? = ?';
+          insertColumnValues.push(index);
+          insertColumnValues.push(item);
+        }
+      });
+
+      const sqlQuery = `SELECT * FROM ${RDS_TABLES.TEAM} WHERE ${insertColumnName}`;
+
+      const response = await rdsService.query({
+        sql: sqlQuery,
+        inserts: insertColumnValues
+      });
+
+      console.log('GQL::Mutation::TeamModel::fetchTeamDetailsByParams::response:: ', response);
+      return Promise.resolve(response);
+    }
+    catch (error) {
+      logger.error('GQL::Mutation::TeamModel:fetchTeamDetailsByParams::Error:: ', error);
       return Promise.reject(error);
     }
   }
