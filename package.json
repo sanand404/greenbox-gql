@@ -13,9 +13,11 @@
   "dependencies": {
     "@babel/runtime": "^7.3.1",
     "apollo-server": "^2.4.0",
+    "aws-sdk": "^2.418.0",
     "dotenv": "^6.2.0",
     "graphql": "^14.1.1",
     "promise-mysql": "^3.3.1",
+    "serverless-pseudo-parameters": "^2.4.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
@@ -31,6 +33,9 @@
     "babel-watch": "^7.0.0",
     "eslint": "^4.18.0",
     "eslint-config-airbnb-base": "^11.1.0",
-    "eslint-plugin-import": "^2.9.0"
+    "eslint-plugin-import": "^2.9.0",
+    "serverless-appsync-plugin": "^1.1.0",
+    "serverless-dynamodb-local": "^0.2.36",
+    "serverless-offline": "^4.8.1"
   }
 }

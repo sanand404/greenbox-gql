@@ -2,7 +2,7 @@ import { gql } from 'apollo-server';
 
 const typeDefs = gql`
      type Team {
-        idTeam: ID!
+        id: ID!
         teamName: String!
         teamFlag: String
         isActive(active: Boolean): Boolean
