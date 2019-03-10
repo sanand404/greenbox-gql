@@ -1,7 +1,7 @@
  # Define the model Team
  type Team {
      id: ID! # Primary partition key in DynamoDB
-     name: String!
+     name: String
      flag: String
      isActive: Boolean
      createdAt: String
@@ -12,8 +12,6 @@
      name: String!
      flag: String
      isActive: Boolean
-     createdAt: String
-     updatedAt: String
  }
 
  type Query {

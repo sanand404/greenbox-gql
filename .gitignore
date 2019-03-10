@@ -7,3 +7,4 @@ jspm_packages
 
 config.gypi
 .dynamodb
+package-lock.json

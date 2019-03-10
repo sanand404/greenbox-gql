@@ -16,8 +16,12 @@
     "aws-sdk": "^2.418.0",
     "dotenv": "^6.2.0",
     "graphql": "^14.1.1",
+    "graphql-playground-middleware-lambda": "^1.7.13",
+    "graphql-server-lambda": "^1.4.0",
     "promise-mysql": "^3.3.1",
+    "serverless-dynamodb-local": "^0.2.35",
     "serverless-pseudo-parameters": "^2.4.0",
+    "uuid": "^3.3.2",
     "winston": "^3.2.1"
   },
   "devDependencies": {
@@ -35,7 +39,6 @@
     "eslint-config-airbnb-base": "^11.1.0",
     "eslint-plugin-import": "^2.9.0",
     "serverless-appsync-plugin": "^1.1.0",
-    "serverless-dynamodb-local": "^0.2.36",
     "serverless-offline": "^4.8.1"
   }
 }

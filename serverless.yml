@@ -1,4 +1,4 @@
-service: greenbox-gql
+service: greenbox
 
 package:
   individually: true
@@ -14,7 +14,7 @@ resources:
     teamTable: # name of the resource to be use later
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: team # name of the table
+        TableName: ${self:service}-${opt:stage, self:provider.stage}-team # name of the table
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
@@ -26,6 +26,13 @@ resources:
           WriteCapacityUnits: 1
 
 custom:
+  dynamodb:
+   stages:
+     - dev
+   start:
+     migrate: true
+     inMemory: true
+     # noStart: true
   appsync-offline: # appsync-offline configuration
     port: 62222
     dynamodb:
@@ -38,7 +45,7 @@ custom:
       - type: AMAZON_DYNAMODB
         name: teamDataSource # name of the resource
         config:
-          tableName: team # name of DynamoDB table
+          tableName: ${self:service}-${opt:stage, self:provider.stage}-team # name of DynamoDB table
     mappingTemplatesLocation: graphql/public/mapping-template
     mappingTemplates:
       - dataSource: teamDataSource

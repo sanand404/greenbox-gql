@@ -8,6 +8,6 @@ import resolver from './graphql/rootSchema';
 require('dotenv').config({ path: '../../.env' });
 
 const server = new ApolloServer({ typeDefs, resolvers: resolver });
-server.listen({ port: 3000 }).then(({ url }) => {
+server.listen({ port: 7000 }).then(({ url }) => {
   console.log('Server started ', url);
 });
