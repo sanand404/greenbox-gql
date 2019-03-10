@@ -1,0 +1,64 @@
+service: greenbox-gql
+
+package:
+  individually: true
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: dev
+  region: us-east-1
+
+resources:
+  Resources:
+    teamTable: # name of the resource to be use later
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: team # name of the table
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id # partition key
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+custom:
+  appsync-offline: # appsync-offline configuration
+    port: 62222
+    dynamodb:
+      client:
+        endpoint: "http://localhost:8000"
+  appSync: # appsync plugin configuration
+    name: greenbox-appsync
+    authenticationType: API_KEY # use API_KEY
+    dataSources:
+      - type: AMAZON_DYNAMODB
+        name: teamDataSource # name of the resource
+        config:
+          tableName: team # name of DynamoDB table
+    mappingTemplatesLocation: graphql/public/mapping-template
+    mappingTemplates:
+      - dataSource: teamDataSource
+        type: Query
+        field: listTeam # from the query in schema.graphql
+        request: "team/get/teams-request.vtl"
+        response: "team/get/teams-response.vtl"
+      - dataSource: teamDataSource
+        type: Query
+        field: teamById # from the query in schema.graphql
+        request: "team/get/team-request.vtl"
+        response: "team/get/team-response.vtl"
+      - dataSource: teamDataSource
+        type: Mutation
+        field: createTeam
+        request: "team/put/team-request.vtl"
+        response: "team/put/team-response.vtl"
+    schema: graphql/public/schema.graphql
+plugins:
+  - serverless-pseudo-parameters
+  - serverless-appsync-plugin
+  - serverless-dynamodb-local
+  - serverless-offline
