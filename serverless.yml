@@ -25,12 +25,28 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
 
+# Lambda Function
+functions:
+  hello: # function name
+    handler: handler/testHandler/handler.main # where the actual code is located
+    # to call our function from outside, we need to expose it to the outer world
+    # in order to do so, we create a REST endpoint
+    events:
+      - http:
+          path: hello # path from endpoint
+          method: any # HTTP method for the endpoint
+
 custom:
-  appsync-offline: # appsync-offline configuration
-    port: 62222
-    dynamodb:
-      client:
-        endpoint: "http://localhost:8000"
+  webpack:
+    webpackConfig: 'webpack.config.js' #name of webpack configuration file
+    includeModules: true # add excluded modules to the bundle
+    packager: 'npm' # package manager we use
+
+  # appsync-offline: # appsync-offline configuration
+  #   port: 62222
+  #   dynamodb:
+  #     client:
+  #       endpoint: "http://localhost:8000"
   appSync: # appsync plugin configuration
     name: greenbox-appsync
     authenticationType: API_KEY # use API_KEY
@@ -62,3 +78,4 @@ plugins:
   - serverless-appsync-plugin
   - serverless-dynamodb-local
   - serverless-offline
+  - serverless-webpack
