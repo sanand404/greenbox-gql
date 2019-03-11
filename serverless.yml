@@ -8,6 +8,23 @@ provider:
   runtime: nodejs8.10
   stage: dev
   region: us-east-1
+  environemnt:
+    SERVICE_ENV: ${self:service}-${opt:stage, self:provider.stage}
+    REGION: ${opt:region, self:provider.region}
+    # Need to replace with condition option
+    CURRENT_ENV: ${opt:stage, self:provider.stage}
+    LOGGING_LEVEL: debug
+    NODE_ENV: ${opt:stage, self:provider.stage}
+
+functions:
+  graphql:
+    handler: handler/graphql/handler.graphql
+    events:
+      - http:
+          path: graphql
+          method: post
+          cors: true
+
 
 resources:
   Resources:
@@ -41,6 +58,8 @@ custom:
   appSync: # appsync plugin configuration
     name: greenbox-appsync
     authenticationType: API_KEY # use API_KEY
+    logConfig:
+      level: ALL
     dataSources:
       - type: AMAZON_DYNAMODB
         name: teamDataSource # name of the resource

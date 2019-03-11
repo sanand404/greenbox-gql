@@ -13,4 +13,21 @@ exports.graphql = (event, context, callback) => {
     callback(error, body);
   };
 
-}
+  const handler = graphqlLambda((innerEvent, innerContext) => {
+    const user = null;
+
+    return {
+      schema,
+      context: {
+        ...innerEvent,
+        ...innerContext,
+        user
+      }
+    };
+  });
+
+  return handler({
+    ...event,
+    httpMethos: event.method
+  }, context, callbackFilter);
+};

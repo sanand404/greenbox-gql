@@ -66,7 +66,7 @@ class TeamModel {
   listTeam = async() => {
     try {
       const teams = await dbTeam.listTeam();
-      logger.info('GQL::Query::Team::Model::listTeam::team:: ', teams);
+      logger.debug('GQL::Query::Team::Model::listTeam::team:: ', teams);
 
       return Promise.resolve(teams);
     }
