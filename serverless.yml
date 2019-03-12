@@ -16,13 +16,45 @@ provider:
     LOGGING_LEVEL: debug
     NODE_ENV: ${opt:stage, self:provider.stage}
 
+iamRoleStatements:
+   - Effect: Allow
+     Action:
+       - "lambda:InvokeFunction"
+     Resource: "*"
+   - Effect: Allow
+     Action:
+       - dynamodb:Query
+       - dynamodb:Scan
+       - dynamodb:GetItem
+       - dynamodb:PutItem
+       - dynamodb:UpdateItem
+       - dynamodb:DeleteItem
+       - dynamodb:GetRecords
+       - dynamodb:GetShardIterator
+       - dynamodb:DescribeStream
+       - dynamodb:ListStreams
+     Resource:
+       - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}-${opt:stage}-team"
+      
+
 functions:
   graphql:
-    handler: handler/graphql/handler.graphql
+    handler: index.handler
     events:
       - http:
           path: graphql
           method: post
+          cors: true
+  
+  playground:
+    handler: index.playgroundHandler
+    environment:
+      GRAPHQL_URL: 'https://7xcy6m2dsc.execute-api.us-east-1.amazonaws.com/dev/graphql'
+    timeout: 30
+    events:
+      - http:
+          path: playground
+          method: get
           cors: true
 
 
@@ -43,6 +75,13 @@ resources:
           WriteCapacityUnits: 1
 
 custom:
+  graphqlUrl:  'https://7xcy6m2dsc.execute-api.us-east-1.amazonaws.com/dev/graphql'
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules:
+      packagePath: ./package.json
+      forceExclude:
+        - aws-sdk
   dynamodb:
    stages:
      - dev
@@ -86,5 +125,6 @@ custom:
 plugins:
   - serverless-pseudo-parameters
   - serverless-appsync-plugin
+  - serverless-webpack
   - serverless-dynamodb-local
   - serverless-offline

@@ -1,13 +1,22 @@
-import { ApolloServer, gql } from 'apollo-server';
+import { ApolloServer } from 'apollo-server-lambda';
 // import typeDefs from './src/schema';
 // import resolver from './src/resolvers';
-
+// import lambdaPlayground from 'graphql-playground-middleware-lambda';
 import typeDefs from './graphql/public/schema';
 import resolver from './graphql/rootSchema';
 
 require('dotenv').config({ path: '../../.env' });
 
 const server = new ApolloServer({ typeDefs, resolvers: resolver });
-server.listen({ port: 7000 }).then(({ url }) => {
-  console.log('Server started ', url);
-});
+
+// if (!process.env.IS_OFFLINE) {
+//   server.listen({ port: 7000 }).then(({ url }) => {
+//     console.log('Server started ', url);
+//   });
+// }
+
+// exports.playgroundHandler = lambdaPlayground({
+//   endpoint: (process.env.IS_OFFLINE) ? 'http://localhost:5000/graphql' : process.env.GRAPHQL_URL
+// });
+
+exports.handler = server.createHandler();
