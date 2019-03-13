@@ -1,11 +1,10 @@
 import { ApolloServer } from 'apollo-server-lambda';
+import 'dotenv/config';
 // import typeDefs from './src/schema';
 // import resolver from './src/resolvers';
 // import lambdaPlayground from 'graphql-playground-middleware-lambda';
 import typeDefs from './graphql/public/schema';
 import resolver from './graphql/rootSchema';
-
-require('dotenv').config({ path: '../../.env' });
 
 const server = new ApolloServer({ typeDefs, resolvers: resolver });
 

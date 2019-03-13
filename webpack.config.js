@@ -1,7 +1,13 @@
 const path = require('path');
 const slsw = require('serverless-webpack');
 const nodeExternals = require('webpack-node-externals');
-// const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+
+const {
+  NODE_ENV
+} = process.env;
+
 
 module.exports = {
   mode: 'production',
@@ -30,6 +36,11 @@ module.exports = {
       }
     ]
   },
+  plugins: [
+    new CopyWebpackPlugin([
+      '.env',
+    ]),
+  ],
   output: {
     libraryTarget: 'commonjs',
     path: path.join(__dirname, '.webpack'),
