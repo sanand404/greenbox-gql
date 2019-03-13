@@ -36,11 +36,11 @@ module.exports = {
       }
     ]
   },
-  plugins: [
-    new CopyWebpackPlugin([
-      '.env',
-    ]),
-  ],
+  // plugins: [
+  //   new CopyWebpackPlugin([
+  //     '.env',
+  //   ]),
+  // ],
   output: {
     libraryTarget: 'commonjs',
     path: path.join(__dirname, '.webpack'),
